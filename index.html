@@ -257,12 +257,45 @@
   .video-tap p { font-size: 15px; font-weight: 500; color: #1a1a1a; }
   .video-tap small { font-size: 13px; color: #999; display: block; margin-top: 4px; }
   .video-tap.recorded p { color: #16a34a; }
+
+  .quality-badge {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+
   video {
     width: 100%;
     border-radius: 12px;
     margin-top: 1rem;
-    max-height: 200px;
+    max-height: 220px;
     background: #000;
+    object-fit: contain;
+  }
+
+  .video-info {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .video-info-pill {
+    background: #f0ede8;
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #666;
+  }
+  .video-info-pill.green {
+    background: #f0faf5;
+    color: #16a34a;
   }
 
   /* SUCCESS */
@@ -415,16 +448,24 @@
     </div>
     <div class="video-wrap">
       <div class="video-desc">
-        Registra un video di <strong>circa 2 minuti</strong> mostrando: ingresso, cucina, bagno, camera da letto e letti rifatti.
+        Registra un video di <strong>circa 2 minuti</strong> mostrando: ingresso, cucina, bagno, camera da letto e letti rifatti.<br><br>
+        💡 <strong>Suggerimento vetri:</strong> avvicinati e tieni ferma la mano per vedere chiaramente gli aloni.
       </div>
-      <div class="video-tap" id="video-box" onclick="document.getElementById('video-input').click()">
+
+      <div style="text-align:center; margin-bottom: 12px;">
+        <span class="quality-badge">📹 Alta qualità attiva</span>
+      </div>
+
+      <div class="video-tap" id="video-box" onclick="startVideo()">
         <div class="vid-icon" id="video-icon">🎥</div>
         <p id="video-label">Tocca per registrare</p>
-        <small id="video-hint">Si apre direttamente la fotocamera</small>
+        <small id="video-hint">Usa la fotocamera in alta qualità</small>
         <input type="file" id="video-input" accept="video/*" capture="environment" style="display:none" onchange="videoSelected(this)">
       </div>
+
       <div id="video-preview" style="display:none;">
         <video id="vid-el" controls playsinline></video>
+        <div class="video-info" id="video-info"></div>
       </div>
       <div style="height: 80px;"></div>
     </div>
@@ -486,16 +527,64 @@ function updateProgress() {
   document.getElementById('btn-next-list').disabled = (done < totalItems);
 }
 
+function startVideo() {
+  // Apre direttamente l'input file (fotocamera nativa = qualità massima)
+  document.getElementById('video-input').click();
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
 function videoSelected(input) {
   if (!input.files || !input.files[0]) return;
   var file = input.files[0];
-  document.getElementById('vid-el').src = URL.createObjectURL(file);
+
+  // Usa URL.createObjectURL senza alcuna conversione/compressione
+  var objectUrl = URL.createObjectURL(file);
+  var vidEl = document.getElementById('vid-el');
+  vidEl.src = objectUrl;
+
   document.getElementById('video-preview').style.display = 'block';
+
   var box = document.getElementById('video-box');
   box.classList.add('recorded');
   document.getElementById('video-icon').textContent = '✅';
   document.getElementById('video-label').textContent = 'Video registrato!';
-  document.getElementById('video-hint').textContent = file.name;
+  document.getElementById('video-hint').textContent = 'Tocca di nuovo per cambiarlo';
+
+  // Mostra info qualità file
+  var infoDiv = document.getElementById('video-info');
+  infoDiv.innerHTML = '';
+
+  var sizeEl = document.createElement('span');
+  sizeEl.className = 'video-info-pill green';
+  sizeEl.textContent = '📁 ' + formatFileSize(file.size);
+  infoDiv.appendChild(sizeEl);
+
+  var typeEl = document.createElement('span');
+  typeEl.className = 'video-info-pill';
+  typeEl.textContent = file.type || 'video nativo';
+  infoDiv.appendChild(typeEl);
+
+  // Quando i metadati sono caricati mostra la risoluzione
+  vidEl.onloadedmetadata = function() {
+    if (vidEl.videoWidth && vidEl.videoHeight) {
+      var resEl = document.createElement('span');
+      resEl.className = 'video-info-pill green';
+      resEl.textContent = '🎬 ' + vidEl.videoWidth + '×' + vidEl.videoHeight;
+      infoDiv.appendChild(resEl);
+    }
+    var durEl = document.createElement('span');
+    durEl.className = 'video-info-pill';
+    var sec = Math.round(vidEl.duration);
+    var min = Math.floor(sec/60);
+    var s = sec % 60;
+    durEl.textContent = '⏱ ' + min + ':' + (s < 10 ? '0' : '') + s;
+    infoDiv.appendChild(durEl);
+  };
+
   document.getElementById('btn-confirm').disabled = false;
 }
 
@@ -516,8 +605,9 @@ function restart() {
   box.classList.remove('recorded');
   document.getElementById('video-icon').textContent = '🎥';
   document.getElementById('video-label').textContent = 'Tocca per registrare';
-  document.getElementById('video-hint').textContent = 'Si apre direttamente la fotocamera';
+  document.getElementById('video-hint').textContent = 'Usa la fotocamera in alta qualità';
   document.getElementById('video-preview').style.display = 'none';
+  document.getElementById('video-info').innerHTML = '';
   document.getElementById('video-input').value = '';
   goTo('s-apt');
 }
