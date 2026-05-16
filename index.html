@@ -660,7 +660,7 @@ async function confirmCleaning() {
     // Carica video su Supabase Storage
     if (selectedVideoFile) {
       var ext = selectedVideoFile.name.split('.').pop() || 'mp4';
-      var fileName = currentApt.replace(/\s+/g, '-') + '_' + now.toISOString().replace(/[:.]/g, '-') + '.' + ext;
+      var fileName = currentApt.replace(/[^a-zA-Z0-9]/g, '-') + '_' + now.toISOString().replace(/[:.]/g, '-') + '.' + ext;
 
       var uploadRes = await fetch(SUPABASE_URL + '/storage/v1/object/Video/' + fileName, {
         method: 'POST',
