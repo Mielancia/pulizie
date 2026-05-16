@@ -662,7 +662,7 @@ async function confirmCleaning() {
       var ext = selectedVideoFile.name.split('.').pop() || 'mp4';
       var fileName = currentApt.replace(/[^a-zA-Z0-9]/g, '-') + '_' + now.toISOString().replace(/[:.]/g, '-') + '.' + ext;
 
-      var uploadRes = await fetch(SUPABASE_URL + '/storage/v1/object/Video/' + fileName, {
+      var uploadRes = await fetch(SUPABASE_URL + '/storage/v1/object/Video/' + encodeURIComponent(fileName), {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + SUPABASE_KEY,
@@ -689,7 +689,8 @@ async function confirmCleaning() {
         appartamento: currentApt,
         checklist: checklist,
         note: note || null,
-        video_url: videoUrl
+        video_url: videoUrl,
+        created_at: new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Rome'}).replace(' ', 'T') + '+02:00'
       })
     });
 
