@@ -500,6 +500,7 @@
       <div style="height: 80px;"></div>
     </div>
     <div class="bottom-action">
+      <textarea id="note-mancante" placeholder="Cosa manca nell'appartamento? (facoltativo)" style="width:100%;padding:12px;border:1px solid #e8e8e8;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;resize:none;height:80px;margin-bottom:10px;box-sizing:border-box;"></textarea>
       <button class="btn-primary green" id="btn-confirm" disabled onclick="confirmCleaning()">✓ Conferma e firma pulizia</button>
       <button class="btn-secondary" onclick="goTo('s-list')">← Torna alla checklist</button>
     </div>
@@ -525,8 +526,11 @@
 </div>
  
 <script>
+var SUPABASE_URL = 'https://ysfwsgxjytrlzgqfzyka.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzZndzZ3hqeXRybHpncWZ6eWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NjU2MTEsImV4cCI6MjA5NDQ0MTYxMX0.DkLSyNoiBDdiRMQZ1OT0KP_w423E4RJHlLSAlfyBK2k';
 var currentApt = '';
 var totalItems = 10;
+var selectedVideoFile = null;
  
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -588,6 +592,7 @@ function formatFileSize(bytes) {
 function videoSelected(input) {
   if (!input.files || !input.files[0]) return;
   var file = input.files[0];
+  selectedVideoFile = file;
  
   var objectUrl = URL.createObjectURL(file);
   var vidEl = document.getElementById('vid-el');
@@ -633,11 +638,70 @@ function videoSelected(input) {
   document.getElementById('btn-confirm').disabled = false;
 }
  
-function confirmCleaning() {
-  var now = new Date();
-  document.getElementById('done-apt').textContent = currentApt;
-  document.getElementById('done-date').textContent = now.toLocaleDateString('it-IT', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) + ' ore ' + now.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
-  goTo('s-done');
+async function confirmCleaning() {
+  var btn = document.getElementById('btn-confirm');
+  btn.disabled = true;
+  btn.textContent = '⏳ Salvataggio in corso...';
+
+  try {
+    // Raccoglie checklist
+    var checklist = [];
+    document.querySelectorAll('#s-list .check-item').forEach(function(el) {
+      checklist.push({
+        voce: el.querySelector('span').textContent,
+        fatto: el.classList.contains('done')
+      });
+    });
+
+    var note = document.getElementById('note-mancante').value.trim();
+    var now = new Date();
+    var videoUrl = null;
+
+    // Carica video su Supabase Storage
+    if (selectedVideoFile) {
+      var ext = selectedVideoFile.name.split('.').pop() || 'mp4';
+      var fileName = currentApt.replace(/\s+/g, '-') + '_' + now.toISOString().replace(/[:.]/g, '-') + '.' + ext;
+
+      var uploadRes = await fetch(SUPABASE_URL + '/storage/v1/object/Video/' + fileName, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': selectedVideoFile.type || 'video/mp4'
+        },
+        body: selectedVideoFile
+      });
+
+      if (uploadRes.ok) {
+        videoUrl = SUPABASE_URL + '/storage/v1/object/public/Video/' + fileName;
+      }
+    }
+
+    // Salva riepilogo su Supabase DB
+    await fetch(SUPABASE_URL + '/rest/v1/pulizie', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        appartamento: currentApt,
+        checklist: checklist,
+        note: note || null,
+        video_url: videoUrl
+      })
+    });
+
+    document.getElementById('done-apt').textContent = currentApt;
+    document.getElementById('done-date').textContent = now.toLocaleDateString('it-IT', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) + ' ore ' + now.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
+    goTo('s-done');
+
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '✓ Conferma e firma pulizia';
+    alert('Errore nel salvataggio. Controlla la connessione e riprova.');
+  }
 }
  
 function restart() {
@@ -654,6 +718,8 @@ function restart() {
   document.getElementById('video-preview').style.display = 'none';
   document.getElementById('video-info').innerHTML = '';
   document.getElementById('video-input').value = '';
+  selectedVideoFile = null;
+  document.getElementById('note-mancante').value = '';
   var btn = document.getElementById('select-all-btn');
   btn.textContent = '☐ Seleziona tutto';
   btn.classList.remove('all-done');
