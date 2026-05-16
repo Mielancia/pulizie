@@ -249,10 +249,24 @@ async function carica() {
       var checkHtml = '';
       // Raggruppa per sezione
       var sezioni = {
-        'Camera da letto': ['Letto rifatto con lenzuola pulite','Cuscini sistemati','Armadio ordinato e asciugamani cambiati'],
-        'Bagno': ['WC igienizzato','Lavandino e doccia puliti','Sapone e shampoo riforniti'],
-        'Cucina': ['Piano cottura e forno puliti','Frigo controllato e pulito'],
-        'Generale': ['Pavimenti spazzati e lavati','Finestre chiuse, luci spente']
+        'Tutte le voci': [
+          'Aprire armadi e cassetti per controllare che non ci siano spazzatura o oggetti',
+          'Rifornire kit di cortesia e fascette bagno',
+          'Rifornire monodose in cucina',
+          'Sistemare un set di asciugamani per ospite',
+          'Sistemare uno scendi doccia per bagno',
+          'Lavastoviglie svuotata e lavata',
+          'Stoviglie messe a posto',
+          'Piano cottura e forno puliti',
+          'Frigo controllato e pulito',
+          'Pulire superfici',
+          'Passare aspirapolvere e straccio',
+          'Sistemare poltrone e divano che risultino ordinati',
+          'WC lavato ed igienizzato',
+          'Lavandini e doccia puliti',
+          'Letti rifatti (solo se usati)',
+          'Chiudere tutte le finestre ed aprire le tende'
+        ]
       };
 
       Object.keys(sezioni).forEach(function(sez) {
