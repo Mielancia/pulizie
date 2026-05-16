@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pannello Pulizie</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f4f0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: #fff;
+  }
+
+  .top-bar {
+    background: #1a1a1a;
+    padding: 1.25rem 1.25rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .top-bar .logo {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 2px;
+  }
+  .top-bar .title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .top-bar .subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .content { padding: 1.25rem; }
+
+  .loading {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #999;
+    font-size: 14px;
+  }
+  .empty .icon { font-size: 40px; margin-bottom: 10px; }
+
+  /* CARD PULIZIA */
+  .pulizia-card {
+    background: #fafaf9;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pulizia-card:active { transform: scale(0.98); }
+  .pulizia-card-header {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .pulizia-card-left { flex: 1; }
+  .pulizia-apt {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 3px;
+  }
+  .pulizia-date {
+    font-size: 13px;
+    color: #999;
+  }
+  .pulizia-badges {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+  }
+  .badge-green { background: #f0faf5; color: #16a34a; }
+  .badge-gray { background: #f0ede8; color: #666; }
+  .badge-video { background: #eff6ff; color: #2563eb; }
+  .chevron { color: #ccc; font-size: 18px; transition: transform 0.2s; }
+  .chevron.open { transform: rotate(90deg); }
+
+  /* DETTAGLIO */
+  .pulizia-detail {
+    display: none;
+    border-top: 1px solid #f0ede8;
+    padding: 1rem 1.25rem 1.25rem;
+  }
+  .pulizia-detail.open { display: block; }
+
+  .detail-section {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #444;
+    margin: 1rem 0 0.5rem;
+  }
+  .detail-section:first-child { margin-top: 0; }
+
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+  }
+  .check-row .dot { font-size: 16px; }
+  .check-row.non-fatto { color: #999; }
+
+  .note-box {
+    background: #fff8ed;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #92400e;
+    line-height: 1.5;
+  }
+
+  .video-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    justify-content: center;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+  .video-btn:hover { background: #333; }
+  .video-btn:active { transform: scale(0.98); }
+
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    color: #999;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .refresh-btn:hover { color: #1a1a1a; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="logo">Pulizie Airbnb</div>
+    <div class="title">Pannello di controllo</div>
+    <div class="subtitle" id="subtitle">Caricamento...</div>
+  </div>
+
+  <div class="content">
+    <div id="lista"><div class="loading">⏳ Caricamento pulizie...</div></div>
+    <button class="refresh-btn" onclick="carica()">↻ Aggiorna</button>
+  </div>
+</div>
+
+<script>
+var SUPABASE_URL = 'https://ysfwsgxjytrlzgqfzyka.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzZndzZ3hqeXRybHpncWZ6eWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NjU2MTEsImV4cCI6MjA5NDQ0MTYxMX0.DkLSyNoiBDdiRMQZ1OT0KP_w423E4RJHlLSAlfyBK2k';
+
+function formatData(isoStr) {
+  if (!isoStr) return '';
+  var d = new Date(isoStr);
+  var data = d.toLocaleDateString('it-IT', {timeZone:'Europe/Rome', weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  var ora = d.toLocaleTimeString('it-IT', {timeZone:'Europe/Rome', hour:'2-digit', minute:'2-digit'});
+  return data + ' · ore ' + ora;
+}
+
+async function carica() {
+  document.getElementById('lista').innerHTML = '<div class="loading">⏳ Caricamento pulizie...</div>';
+  document.getElementById('subtitle').textContent = 'Caricamento...';
+
+  try {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/pulizie?order=created_at.desc', {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      }
+    });
+    var data = await res.json();
+
+    document.getElementById('subtitle').textContent = data.length + ' pulizie registrate';
+
+    if (!data.length) {
+      document.getElementById('lista').innerHTML = '<div class="empty"><div class="icon">🧹</div>Nessuna pulizia ancora registrata.</div>';
+      return;
+    }
+
+    var html = '';
+    data.forEach(function(p, i) {
+      var checklist = p.checklist || [];
+      var fatte = checklist.filter(function(c){ return c.fatto; }).length;
+      var totale = checklist.length;
+      var tuttoOk = fatte === totale;
+
+      var checkHtml = '';
+      // Raggruppa per sezione
+      var sezioni = {
+        'Camera da letto': ['Letto rifatto con lenzuola pulite','Cuscini sistemati','Armadio ordinato e asciugamani cambiati'],
+        'Bagno': ['WC igienizzato','Lavandino e doccia puliti','Sapone e shampoo riforniti'],
+        'Cucina': ['Piano cottura e forno puliti','Frigo controllato e pulito'],
+        'Generale': ['Pavimenti spazzati e lavati','Finestre chiuse, luci spente']
+      };
+
+      Object.keys(sezioni).forEach(function(sez) {
+        checkHtml += '<div class="detail-section">' + sez + '</div>';
+        sezioni[sez].forEach(function(voce) {
+          var item = checklist.find(function(c){ return c.voce === voce; });
+          var fatto = item ? item.fatto : false;
+          checkHtml += '<div class="check-row' + (fatto ? '' : ' non-fatto') + '">';
+          checkHtml += '<span class="dot">' + (fatto ? '✅' : '⬜') + '</span>';
+          checkHtml += '<span>' + voce + '</span></div>';
+        });
+      });
+
+      var noteHtml = p.note ? '<div class="detail-section">⚠️ Cosa manca</div><div class="note-box">' + p.note + '</div>' : '';
+      var videoHtml = p.video_url ? '<div class="detail-section">Video</div><a class="video-btn" href="' + p.video_url + '" target="_blank">🎥 Guarda il video</a>' : '';
+
+      html += '<div class="pulizia-card">';
+      html += '<div class="pulizia-card-header" onclick="toggleCard(' + i + ')">';
+      html += '<div class="pulizia-card-left">';
+      html += '<div class="pulizia-apt">' + p.appartamento + '</div>';
+      html += '<div class="pulizia-date">' + formatData(p.created_at) + '</div>';
+      html += '</div>';
+      html += '<div class="pulizia-badges">';
+      html += '<span class="badge ' + (tuttoOk ? 'badge-green' : 'badge-gray') + '">' + fatte + '/' + totale + '</span>';
+      if (p.video_url) html += '<span class="badge badge-video">🎥</span>';
+      if (p.note) html += '<span class="badge badge-gray">⚠️</span>';
+      html += '</div>';
+      html += '<span class="chevron" id="chev-' + i + '">›</span>';
+      html += '</div>';
+      html += '<div class="pulizia-detail" id="detail-' + i + '">';
+      html += checkHtml;
+      html += noteHtml;
+      html += videoHtml;
+      html += '</div>';
+      html += '</div>';
+    });
+
+    document.getElementById('lista').innerHTML = html;
+
+  } catch(e) {
+    document.getElementById('lista').innerHTML = '<div class="empty">❌ Errore nel caricamento. Controlla la connessione.</div>';
+    document.getElementById('subtitle').textContent = 'Errore';
+  }
+}
+
+function toggleCard(i) {
+  var detail = document.getElementById('detail-' + i);
+  var chev = document.getElementById('chev-' + i);
+  var isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+}
+
+carica();
+</script>
+</body>
+</html>
