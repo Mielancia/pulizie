@@ -249,23 +249,30 @@ async function carica() {
       var checkHtml = '';
       // Raggruppa per sezione
       var sezioni = {
-        'Tutte le voci': [
+        'Camera da letto': [
+          'Letti rifatti (solo se usati)',
           'Aprire armadi e cassetti per controllare che non ci siano spazzatura o oggetti',
+          'Sistemare un set di asciugamani per ospite'
+        ],
+        'Bagno': [
+          'Lavandini e doccia puliti',
+          'WC lavato ed igienizzato',
+          'Sistemare un tappetino doccia per bagno',
           'Rifornire kit di cortesia e fascette bagno',
-          'Rifornire monodose in cucina',
-          'Sistemare un set di asciugamani per ospite',
-          'Sistemare uno scendi doccia per bagno',
+          'Aggiungere carta igienica se necessario e cambiare sacchetti spazzatura bagno se usati'
+        ],
+        'Cucina': [
+          'Piano cottura e forno puliti',
           'Lavastoviglie svuotata e lavata',
           'Stoviglie messe a posto',
-          'Piano cottura e forno puliti',
           'Frigo controllato e pulito',
+          'Rifornire monodose in cucina'
+        ],
+        'Generale': [
           'Pulire superfici',
           'Passare aspirapolvere e straccio',
-          'Sistemare poltrone e divano che risultino ordinati',
-          'WC lavato ed igienizzato',
-          'Lavandini e doccia puliti',
-          'Letti rifatti (solo se usati)',
-          'Chiudere tutte le finestre ed aprire le tende'
+          'Sistemare poltrone e divani che risultano ordinati',
+          'Chiudere tutte le finestre e aprire le tende'
         ]
       };
 
