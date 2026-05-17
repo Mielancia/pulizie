@@ -493,11 +493,41 @@
       <div style="height: 80px;"></div>
     </div>
     <div class="bottom-action">
-      <button class="btn-primary" id="btn-next-list" disabled onclick="goTo('s-video')">Avanti: video ispezione →</button>
+      <button class="btn-primary" id="btn-next-list" disabled onclick="goTo('s-note')">Avanti: note →</button>
       <button class="btn-secondary" onclick="goTo('s-apt')">← Cambia appartamento</button>
     </div>
   </div>
  
+  <!-- NOTE -->
+  <div id="s-note" class="screen">
+    <div class="top-bar">
+      <div class="logo">Pulizie Airbnb</div>
+      <div class="apt-title">Note</div>
+      <div class="apt-date" id="apt-name-note"></div>
+    </div>
+    <div class="video-wrap">
+      <div class="video-desc">
+        Questi campi sono <strong>facoltativi</strong> — puoi andare avanti anche senza compilarli.
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <div class="section-title" style="margin: 0 0 0.5rem;">Cosa manca nell'appartamento</div>
+        <textarea id="note-mancante" placeholder="Es. monodosi, carta igienica, detersivi..." style="width:100%;padding:14px;border:1px solid #e8e8e8;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;resize:none;height:110px;box-sizing:border-box;background:#fafaf9;"></textarea>
+      </div>
+
+      <div>
+        <div class="section-title" style="margin: 0 0 0.5rem;">Oggetti trovati rotti o altro</div>
+        <textarea id="note-rotti" placeholder="Es. bicchiere rotto, telecomando mancante..." style="width:100%;padding:14px;border:1px solid #e8e8e8;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;resize:none;height:110px;box-sizing:border-box;background:#fafaf9;"></textarea>
+      </div>
+
+      <div style="height: 80px;"></div>
+    </div>
+    <div class="bottom-action">
+      <button class="btn-primary" onclick="goTo('s-video')">Avanti: video ispezione →</button>
+      <button class="btn-secondary" onclick="goTo('s-list')">← Torna alla checklist</button>
+    </div>
+  </div>
+
   <!-- VIDEO -->
   <div id="s-video" class="screen">
     <div class="top-bar">
@@ -510,18 +540,18 @@
         Registra un video di <strong>circa 2 minuti</strong> mostrando: ingresso, cucina, bagno, camera da letto e letti rifatti.<br><br>
         💡 <strong>Suggerimento vetri:</strong> avvicinati e tieni ferma la mano per vedere chiaramente gli aloni.
       </div>
- 
+
       <div style="text-align:center; margin-bottom: 12px;">
         <span class="quality-badge">📹 Alta qualità attiva</span>
       </div>
- 
+
       <div class="video-tap" id="video-box" onclick="startVideo()">
         <div class="vid-icon" id="video-icon">🎥</div>
         <p id="video-label">Tocca per registrare</p>
         <small id="video-hint">Usa la fotocamera in alta qualità</small>
         <input type="file" id="video-input" accept="video/*" capture="environment" style="display:none" onchange="videoSelected(this)">
       </div>
- 
+
       <div id="video-preview" style="display:none;">
         <video id="vid-el" controls playsinline></video>
         <div class="video-info" id="video-info"></div>
@@ -529,9 +559,8 @@
       <div style="height: 80px;"></div>
     </div>
     <div class="bottom-action">
-      <textarea id="note-mancante" placeholder="Cosa manca nell'appartamento? (facoltativo)" style="width:100%;padding:12px;border:1px solid #e8e8e8;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;resize:none;height:80px;margin-bottom:10px;box-sizing:border-box;"></textarea>
       <button class="btn-primary green" id="btn-confirm" disabled onclick="confirmCleaning()">✓ Conferma e firma pulizia</button>
-      <button class="btn-secondary" onclick="goTo('s-list')">← Torna alla checklist</button>
+      <button class="btn-secondary" onclick="goTo('s-note')">← Torna alle note</button>
     </div>
   </div>
  
@@ -573,6 +602,7 @@ function selectApt(name) {
   var now = new Date();
   var dateStr = now.toLocaleDateString('it-IT', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   document.getElementById('apt-date-label').textContent = dateStr;
+  document.getElementById('apt-name-note').textContent = name;
   document.getElementById('apt-name-video').textContent = name;
   goTo('s-list');
 }
@@ -683,6 +713,7 @@ async function confirmCleaning() {
     });
 
     var note = document.getElementById('note-mancante').value.trim();
+    var noteRotti = document.getElementById('note-rotti').value.trim();
     var now = new Date();
     var videoUrl = null;
 
@@ -718,6 +749,7 @@ async function confirmCleaning() {
         appartamento: currentApt,
         checklist: checklist,
         note: note || null,
+        note_rotti: noteRotti || null,
         video_url: videoUrl,
         created_at: new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Rome'}).replace(' ', 'T') + '+02:00'
       })
@@ -750,6 +782,7 @@ function restart() {
   document.getElementById('video-input').value = '';
   selectedVideoFile = null;
   document.getElementById('note-mancante').value = '';
+  document.getElementById('note-rotti').value = '';
   var btn = document.getElementById('select-all-btn');
   btn.textContent = '☐ Seleziona tutto';
   btn.classList.remove('all-done');

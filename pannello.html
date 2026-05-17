@@ -287,7 +287,9 @@ async function carica() {
         });
       });
 
-      var noteHtml = p.note ? '<div class="detail-section">⚠️ Cosa manca</div><div class="note-box">' + p.note + '</div>' : '';
+      var noteHtml = '';
+      if (p.note) noteHtml += '<div class="detail-section">⚠️ Cosa manca</div><div class="note-box">' + p.note + '</div>';
+      if (p.note_rotti) noteHtml += '<div class="detail-section" style="margin-top:0.75rem;">🔧 Oggetti rotti o altro</div><div class="note-box" style="border-color:#fca5a5;background:#fff5f5;color:#991b1b;">' + p.note_rotti + '</div>';
       var videoHtml = p.video_url ? '<div class="detail-section">Video</div><a class="video-btn" href="' + p.video_url + '" target="_blank">🎥 Guarda il video</a>' : '';
 
       html += '<div class="pulizia-card">';
@@ -300,6 +302,7 @@ async function carica() {
       html += '<span class="badge ' + (tuttoOk ? 'badge-green' : 'badge-gray') + '">' + fatte + '/' + totale + '</span>';
       if (p.video_url) html += '<span class="badge badge-video">🎥</span>';
       if (p.note) html += '<span class="badge badge-gray">⚠️</span>';
+      if (p.note_rotti) html += '<span class="badge" style="background:#fff5f5;color:#991b1b;">🔧</span>';
       html += '</div>';
       html += '<span class="chevron" id="chev-' + i + '">›</span>';
       html += '</div>';
