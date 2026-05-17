@@ -409,12 +409,16 @@
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
-      <div class="progress-text" id="prog-text">0 / 10 completate</div>
+      <div class="progress-text" id="prog-text">0 / 17 completate</div>
     </div>
     <div class="section-wrap">
       <div style="display:flex; align-items:center; justify-content:space-between; margin: 1.5rem 0 0.6rem;">
-        <div class="section-title" style="margin:0;">Tutte le voci</div>
+        <div class="section-title" style="margin:0;">Camera da letto</div>
         <button class="select-all-btn" id="select-all-btn" onclick="selectAll()" style="margin-top:-4px;">☐ Seleziona tutto</button>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span>Letti rifatti (solo se usati)</span>
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -422,19 +426,35 @@
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span>Sistemare un set di asciugamani per ospite</span>
+      </div>
+
+      <div class="section-title">Bagno</div>
+      <div class="check-item" onclick="toggle(this)">
+        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span>Lavandini e doccia puliti</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span>WC lavato ed igienizzato</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span>Sistemare un tappetino doccia per bagno</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span>Rifornire kit di cortesia e fascette bagno</span>
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Rifornire monodose in cucina</span>
+        <span>Aggiungere carta igienica se necessario e cambiare sacchetti spazzatura bagno se usati</span>
       </div>
+
+      <div class="section-title">Cucina</div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Sistemare un set di asciugamani per ospite</span>
-      </div>
-      <div class="check-item" onclick="toggle(this)">
-        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Sistemare uno scendi doccia per bagno</span>
+        <span>Piano cottura e forno puliti</span>
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -446,12 +466,14 @@
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Piano cottura e forno puliti</span>
+        <span>Frigo controllato e pulito</span>
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Frigo controllato e pulito</span>
+        <span>Rifornire monodose in cucina</span>
       </div>
+
+      <div class="section-title">Generale</div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span>Pulire superfici</span>
@@ -462,23 +484,11 @@
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Sistemare poltrone e divano che risultino ordinati</span>
+        <span>Sistemare poltrone e divani che risultano ordinati</span>
       </div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>WC lavato ed igienizzato</span>
-      </div>
-      <div class="check-item" onclick="toggle(this)">
-        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Lavandini e doccia puliti</span>
-      </div>
-      <div class="check-item" onclick="toggle(this)">
-        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Letti rifatti (solo se usati)</span>
-      </div>
-      <div class="check-item" onclick="toggle(this)">
-        <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span>Chiudere tutte le finestre ed aprire le tende</span>
+        <span>Chiudere tutte le finestre e aprire le tende</span>
       </div>
       <div style="height: 80px;"></div>
     </div>
@@ -535,7 +545,7 @@
         <div class="s-label">Riepilogo</div>
         <div class="summary-row"><span class="dot-green">●</span> <strong id="done-apt"></strong></div>
         <div class="summary-row"><span class="dot-green">●</span> <span id="done-date"></span></div>
-        <div class="summary-row"><span class="dot-green">●</span> Checklist completata (16/16)</div>
+        <div class="summary-row"><span class="dot-green">●</span> Checklist completata (17/17)</div>
         <div class="summary-row"><span class="dot-green">●</span> Video ispezione registrato</div>
       </div>
       <button class="btn-primary" onclick="restart()">Nuova pulizia</button>
@@ -548,7 +558,7 @@
 var SUPABASE_URL = 'https://ysfwsgxjytrlzgqfzyka.supabase.co';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzZndzZ3hqeXRybHpncWZ6eWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NjU2MTEsImV4cCI6MjA5NDQ0MTYxMX0.DkLSyNoiBDdiRMQZ1OT0KP_w423E4RJHlLSAlfyBK2k';
 var currentApt = '';
-var totalItems = 16;
+var totalItems = 17;
 var selectedVideoFile = null;
  
 function goTo(id) {
@@ -727,7 +737,7 @@ async function confirmCleaning() {
 function restart() {
   document.querySelectorAll('.check-item').forEach(function(el){ el.classList.remove('done'); });
   document.getElementById('prog-fill').style.width = '0%';
-  document.getElementById('prog-text').textContent = '0 / 16 completate';
+  document.getElementById('prog-text').textContent = '0 / 17 completate';
   document.getElementById('btn-next-list').disabled = true;
   document.getElementById('btn-confirm').disabled = true;
   var box = document.getElementById('video-box');
