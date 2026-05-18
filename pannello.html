@@ -290,7 +290,15 @@ async function carica() {
       var noteHtml = '';
       if (p.note) noteHtml += '<div class="detail-section">⚠️ Cosa manca</div><div class="note-box">' + p.note + '</div>';
       if (p.note_rotti) noteHtml += '<div class="detail-section" style="margin-top:0.75rem;">🔧 Oggetti rotti o altro</div><div class="note-box" style="border-color:#fca5a5;background:#fff5f5;color:#991b1b;">' + p.note_rotti + '</div>';
-      var videoHtml = p.video_url ? '<div class="detail-section">Video</div><a class="video-btn" href="' + p.video_url + '" target="_blank">🎥 Guarda il video</a>' : '';
+      var fotoHtml = '';
+      if (p.foto_urls && p.foto_urls.length) {
+        fotoHtml += '<div class="detail-section" style="margin-top:0.75rem;">📸 Foto (' + p.foto_urls.length + ')</div>';
+        fotoHtml += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+        p.foto_urls.forEach(function(url) {
+          fotoHtml += '<a href="' + url + '" target="_blank"><img src="' + url + '" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #e8e8e8;"></a>';
+        });
+        fotoHtml += '</div>';
+      }
 
       html += '<div class="pulizia-card">';
       html += '<div class="pulizia-card-header" onclick="toggleCard(' + i + ')">';
@@ -303,12 +311,16 @@ async function carica() {
       if (p.video_url) html += '<span class="badge badge-video">🎥</span>';
       if (p.note) html += '<span class="badge badge-gray">⚠️</span>';
       if (p.note_rotti) html += '<span class="badge" style="background:#fff5f5;color:#991b1b;">🔧</span>';
+      if (p.foto_urls && p.foto_urls.length) html += '<span class="badge" style="background:#f0f0ff;color:#4338ca;">📸' + p.foto_urls.length + '</span>';
       html += '</div>';
       html += '<span class="chevron" id="chev-' + i + '">›</span>';
       html += '</div>';
+      var videoHtml = p.video_url ? '<div class="detail-section">Video</div><a class="video-btn" href="' + p.video_url + '" target="_blank">🎥 Guarda il video</a>' : '';
+
       html += '<div class="pulizia-detail" id="detail-' + i + '">';
       html += checkHtml;
       html += noteHtml;
+      html += fotoHtml;
       html += videoHtml;
       html += '</div>';
       html += '</div>';

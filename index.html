@@ -520,6 +520,17 @@
         <textarea id="note-rotti" placeholder="Es. bicchiere rotto, telecomando mancante..." style="width:100%;padding:14px;border:1px solid #e8e8e8;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;resize:none;height:110px;box-sizing:border-box;background:#fafaf9;"></textarea>
       </div>
 
+      <div style="margin-top: 1rem;">
+        <div class="section-title" style="margin: 0 0 0.5rem;">Foto (facoltativo)</div>
+        <div id="foto-box" onclick="document.getElementById('foto-input').click()" style="border:2px dashed #ddd;border-radius:16px;padding:1.5rem;text-align:center;cursor:pointer;background:#fafaf9;transition:all 0.15s;">
+          <div style="font-size:32px;margin-bottom:6px;">📸</div>
+          <p style="font-size:14px;font-weight:500;color:#1a1a1a;">Tocca per aggiungere foto</p>
+          <small style="font-size:12px;color:#999;">Puoi selezionarne più di una</small>
+          <input type="file" id="foto-input" accept="image/*" multiple style="display:none" onchange="fotoSelezionate(this)">
+        </div>
+        <div id="foto-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>
+      </div>
+
       <div style="height: 80px;"></div>
     </div>
     <div class="bottom-action">
@@ -589,6 +600,7 @@ var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 var currentApt = '';
 var totalItems = 17;
 var selectedVideoFile = null;
+var selectedFotos = [];
  
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -639,8 +651,51 @@ function selectAll() {
 }
 
 function startVideo() {
-  // Apre direttamente l'input file (fotocamera nativa = qualità massima)
   document.getElementById('video-input').click();
+}
+
+function fotoSelezionate(input) {
+  if (!input.files || !input.files.length) return;
+  for (var i = 0; i < input.files.length; i++) {
+    selectedFotos.push(input.files[i]);
+  }
+  var preview = document.getElementById('foto-preview');
+  preview.innerHTML = '';
+  selectedFotos.forEach(function(file, idx) {
+    var url = URL.createObjectURL(file);
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;width:calc(33.3% - 6px);';
+    var img = document.createElement('img');
+    img.src = url;
+    img.style.cssText = 'width:100%;height:90px;object-fit:cover;border-radius:10px;border:1px solid #e8e8e8;';
+    var del = document.createElement('div');
+    del.textContent = '✕';
+    del.style.cssText = 'position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;';
+    del.onclick = function(e) {
+      e.stopPropagation();
+      selectedFotos.splice(idx, 1);
+      fotoSelezionate({files:[]});
+      var previewNew = document.getElementById('foto-preview');
+      previewNew.innerHTML = '';
+      selectedFotos.forEach(function(f) {
+        var u = URL.createObjectURL(f);
+        var w = document.createElement('div');
+        w.style.cssText = 'width:calc(33.3% - 6px);';
+        var im = document.createElement('img');
+        im.src = u;
+        im.style.cssText = 'width:100%;height:90px;object-fit:cover;border-radius:10px;border:1px solid #e8e8e8;';
+        w.appendChild(im);
+        previewNew.appendChild(w);
+      });
+    };
+    wrap.appendChild(img);
+    wrap.appendChild(del);
+    preview.appendChild(wrap);
+  });
+  if (selectedFotos.length > 0) {
+    document.getElementById('foto-box').style.borderColor = '#86efac';
+    document.getElementById('foto-box').style.background = '#f0faf5';
+  }
 }
  
 function formatFileSize(bytes) {
@@ -716,6 +771,25 @@ async function confirmCleaning() {
     var noteRotti = document.getElementById('note-rotti').value.trim();
     var now = new Date();
     var videoUrl = null;
+    var fotoUrls = [];
+
+    // Carica foto su Supabase Storage
+    for (var f = 0; f < selectedFotos.length; f++) {
+      var foto = selectedFotos[f];
+      var fotoExt = foto.name.split('.').pop() || 'jpg';
+      var fotoName = currentApt.replace(/[^a-zA-Z0-9]/g, '-') + '_' + now.toISOString().replace(/[:.]/g, '-') + '_foto' + f + '.' + fotoExt;
+      var fotoRes = await fetch(SUPABASE_URL + '/storage/v1/object/foto/' + encodeURIComponent(fotoName), {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': foto.type || 'image/jpeg'
+        },
+        body: foto
+      });
+      if (fotoRes.ok) {
+        fotoUrls.push(SUPABASE_URL + '/storage/v1/object/public/foto/' + encodeURIComponent(fotoName));
+      }
+    }
 
     // Carica video su Supabase Storage
     if (selectedVideoFile) {
@@ -750,6 +824,7 @@ async function confirmCleaning() {
         checklist: checklist,
         note: note || null,
         note_rotti: noteRotti || null,
+        foto_urls: fotoUrls.length > 0 ? fotoUrls : null,
         video_url: videoUrl,
         created_at: new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Rome'}).replace(' ', 'T') + '+02:00'
       })
@@ -781,8 +856,13 @@ function restart() {
   document.getElementById('video-info').innerHTML = '';
   document.getElementById('video-input').value = '';
   selectedVideoFile = null;
+  selectedFotos = [];
   document.getElementById('note-mancante').value = '';
   document.getElementById('note-rotti').value = '';
+  document.getElementById('foto-preview').innerHTML = '';
+  document.getElementById('foto-box').style.borderColor = '#ddd';
+  document.getElementById('foto-box').style.background = '#fafaf9';
+  document.getElementById('foto-input').value = '';
   var btn = document.getElementById('select-all-btn');
   btn.textContent = '☐ Seleziona tutto';
   btn.classList.remove('all-done');
