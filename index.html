@@ -778,7 +778,7 @@ async function confirmCleaning() {
       var foto = selectedFotos[f];
       var fotoExt = foto.name.split('.').pop() || 'jpg';
       var fotoName = currentApt.replace(/[^a-zA-Z0-9]/g, '-') + '_' + now.toISOString().replace(/[:.]/g, '-') + '_foto' + f + '.' + fotoExt;
-      var fotoRes = await fetch(SUPABASE_URL + '/storage/v1/object/foto/' + encodeURIComponent(fotoName), {
+      var fotoRes = await fetch(SUPABASE_URL + '/storage/v1/object/Foto/' + encodeURIComponent(fotoName), {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + SUPABASE_KEY,
@@ -787,7 +787,7 @@ async function confirmCleaning() {
         body: foto
       });
       if (fotoRes.ok) {
-        fotoUrls.push(SUPABASE_URL + '/storage/v1/object/public/foto/' + encodeURIComponent(fotoName));
+        fotoUrls.push(SUPABASE_URL + '/storage/v1/object/public/Foto/' + encodeURIComponent(fotoName));
       }
     }
 
