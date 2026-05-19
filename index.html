@@ -413,7 +413,7 @@
     </div>
     <div class="section-wrap">
       <div style="display:flex; align-items:center; justify-content:space-between; margin: 1.5rem 0 0.6rem;">
-        <div class="section-title" style="margin:0;">Camera da letto</div>
+        <div class="section-title" style="margin:0; color: #1a1a1a; font-size: 14px; letter-spacing: 0; text-transform: none;">Camera da letto</div>
         <button class="select-all-btn" id="select-all-btn" onclick="selectAll()" style="margin-top:-4px;">☐ Seleziona tutto</button>
       </div>
       <div class="check-item" onclick="toggle(this)">
@@ -429,7 +429,7 @@
         <span>Sistemare un set di asciugamani per ospite</span>
       </div>
 
-      <div class="section-title">Bagno</div>
+      <div class="section-title" style="color: #1a1a1a; font-size: 14px; letter-spacing: 0; text-transform: none;">Bagno</div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span>Lavandini e doccia puliti</span>
@@ -451,7 +451,7 @@
         <span>Aggiungere carta igienica se necessario e cambiare sacchetti spazzatura bagno se usati</span>
       </div>
 
-      <div class="section-title">Cucina</div>
+      <div class="section-title" style="color: #1a1a1a; font-size: 14px; letter-spacing: 0; text-transform: none;">Cucina</div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span>Piano cottura e forno puliti</span>
@@ -473,7 +473,7 @@
         <span>Rifornire monodose in cucina</span>
       </div>
 
-      <div class="section-title">Generale</div>
+      <div class="section-title" style="color: #1a1a1a; font-size: 14px; letter-spacing: 0; text-transform: none;">Generale</div>
       <div class="check-item" onclick="toggle(this)">
         <div class="cb"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5l4 4L12 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span>Pulire superfici</span>
@@ -507,21 +507,41 @@
     </div>
     <div class="video-wrap">
       <div class="video-desc">
-        Questi campi sono <strong>facoltativi</strong> — puoi andare avanti anche senza compilarli.
+        Questo campo è <strong>facoltativo,</strong> puoi andare avanti anche senza compilarlo.
       </div>
 
       <div style="margin-bottom: 1rem;">
-        <div class="section-title" style="margin: 0 0 0.5rem;">Cosa manca nell'appartamento</div>
+        <div class="section-title" style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 14px; letter-spacing: 0; text-transform: none;">Cosa manca nell'appartamento</div>
         <textarea id="note-mancante" placeholder="Es. monodosi, carta igienica, detersivi..." style="width:100%;padding:14px;border:1px solid #e8e8e8;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;resize:none;height:110px;box-sizing:border-box;background:#fafaf9;"></textarea>
       </div>
 
+      <div style="height: 80px;"></div>
+    </div>
+    <div class="bottom-action">
+      <button class="btn-primary" onclick="goTo('s-segnalazioni')">Avanti: segnalazioni →</button>
+      <button class="btn-secondary" onclick="goTo('s-list')">← Torna alla checklist</button>
+    </div>
+  </div>
+
+  <!-- SEGNALAZIONI -->
+  <div id="s-segnalazioni" class="screen">
+    <div class="top-bar">
+      <div class="logo">Pulizie Airbnb</div>
+      <div class="apt-title">Segnalazioni</div>
+      <div class="apt-date" id="apt-name-segnalazioni"></div>
+    </div>
+    <div class="video-wrap">
+      <div class="video-desc">
+        Questo campo è <strong>facoltativo,</strong> puoi andare avanti anche senza compilarlo.
+      </div>
+
       <div>
-        <div class="section-title" style="margin: 0 0 0.5rem;">Oggetti trovati rotti o altro</div>
+        <div class="section-title" style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 14px; letter-spacing: 0; text-transform: none;">Oggetti trovati rotti o altro</div>
         <textarea id="note-rotti" placeholder="Es. bicchiere rotto, telecomando mancante..." style="width:100%;padding:14px;border:1px solid #e8e8e8;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a1a;resize:none;height:110px;box-sizing:border-box;background:#fafaf9;"></textarea>
       </div>
 
       <div style="margin-top: 1rem;">
-        <div class="section-title" style="margin: 0 0 0.5rem;">Foto (facoltativo)</div>
+        <div class="section-title" style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 14px; letter-spacing: 0; text-transform: none;">Aggiungi foto come prova</div>
         <div id="foto-box" onclick="document.getElementById('foto-input').click()" style="border:2px dashed #ddd;border-radius:16px;padding:1.5rem;text-align:center;cursor:pointer;background:#fafaf9;transition:all 0.15s;">
           <div style="font-size:32px;margin-bottom:6px;">📸</div>
           <p style="font-size:14px;font-weight:500;color:#1a1a1a;">Tocca per aggiungere foto</p>
@@ -535,7 +555,7 @@
     </div>
     <div class="bottom-action">
       <button class="btn-primary" onclick="goTo('s-video')">Avanti: video ispezione →</button>
-      <button class="btn-secondary" onclick="goTo('s-list')">← Torna alla checklist</button>
+      <button class="btn-secondary" onclick="goTo('s-note')">← Torna alle note</button>
     </div>
   </div>
 
@@ -571,7 +591,7 @@
     </div>
     <div class="bottom-action">
       <button class="btn-primary green" id="btn-confirm" disabled onclick="confirmCleaning()">✓ Conferma e firma pulizia</button>
-      <button class="btn-secondary" onclick="goTo('s-note')">← Torna alle note</button>
+      <button class="btn-secondary" onclick="goTo('s-segnalazioni')">← Torna alle segnalazioni</button>
     </div>
   </div>
  
@@ -615,6 +635,7 @@ function selectApt(name) {
   var dateStr = now.toLocaleDateString('it-IT', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   document.getElementById('apt-date-label').textContent = dateStr;
   document.getElementById('apt-name-note').textContent = name;
+  document.getElementById('apt-name-segnalazioni').textContent = name;
   document.getElementById('apt-name-video').textContent = name;
   goTo('s-list');
 }
